@@ -16,14 +16,20 @@ const Login = () => {
     name: '', 
     email: '', 
     password: '', 
-    confirmPassword: '',
-    userType: 'user' 
+    confirmPassword: ''
   });
   const [forgotEmail, setForgotEmail] = useState('');
   const [showForgot, setShowForgot] = useState(false);
   
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Define admin email - you can change this to your email
+  const ADMIN_EMAIL = 'admin@electrical.com';
+
+  const determineUserType = (email: string) => {
+    return email === ADMIN_EMAIL ? 'admin' : 'user';
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +42,8 @@ const Login = () => {
       return;
     }
     
-    // Simulate authentication
-    const userType = loginData.email.includes('admin') ? 'admin' : 'user';
+    // Determine user type based on email
+    const userType = determineUserType(loginData.email);
     localStorage.setItem('user', JSON.stringify({
       email: loginData.email,
       type: userType,
@@ -46,7 +52,7 @@ const Login = () => {
     
     toast({
       title: "Success",
-      description: "Login successful!",
+      description: `Login successful! Welcome ${userType === 'admin' ? 'Administrator' : 'User'}`,
     });
     navigate('/');
   };
@@ -71,16 +77,17 @@ const Login = () => {
       return;
     }
     
-    // Simulate user creation
+    // Determine user type based on email
+    const userType = determineUserType(signupData.email);
     localStorage.setItem('user', JSON.stringify({
       email: signupData.email,
-      type: signupData.userType,
+      type: userType,
       name: signupData.name
     }));
     
     toast({
       title: "Success",
-      description: "Account created successfully!",
+      description: `Account created successfully! You are registered as ${userType === 'admin' ? 'Administrator' : 'User'}`,
     });
     navigate('/');
   };
@@ -265,6 +272,9 @@ const Login = () => {
                       className="pl-10 border-aesthetic-green-200 focus:border-aesthetic-green-400"
                     />
                   </div>
+                  <p className="text-xs text-muted-foreground">
+                    Note: Only admin@electrical.com will have administrator privileges
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
