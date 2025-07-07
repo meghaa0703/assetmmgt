@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,12 +42,9 @@ const Dashboard = () => {
     navigate('/login');
   };
 
-  const handleSectionClick = (section: string) => {
-    toast({
-      title: "Section Access",
-      description: `Accessing ${section} section...`,
-    });
-    // Navigate to specific section (would be implemented with proper routing)
+  const handleSectionClick = (section: string, route: string) => {
+    console.log(`Navigating to ${section}`);
+    navigate(route);
   };
 
   if (!user) {
@@ -61,28 +57,28 @@ const Dashboard = () => {
       description: "Add new products to the inventory system",
       icon: Plus,
       color: "from-aesthetic-green-400 to-aesthetic-green-600",
-      onClick: () => handleSectionClick("New Product")
+      onClick: () => handleSectionClick("New Product", "/new-product")
     },
     {
       title: "Assign Product",
       description: "Assign products to employees or departments",
       icon: Users,
       color: "from-blue-400 to-blue-600",
-      onClick: () => handleSectionClick("Assign Product")
+      onClick: () => handleSectionClick("Assign Product", "/assign-product")
     },
     {
       title: "Return Product",
       description: "Process product returns and updates",
       icon: RotateCcw,
       color: "from-orange-400 to-orange-600",
-      onClick: () => handleSectionClick("Return Product")
+      onClick: () => handleSectionClick("Return Product", "/return-product")
     },
     {
       title: "View Database",
       description: "Access and manage the complete product database",
       icon: Database,
       color: "from-purple-400 to-purple-600",
-      onClick: () => handleSectionClick("View Database")
+      onClick: () => handleSectionClick("View Database", "/view-database")
     }
   ];
 
