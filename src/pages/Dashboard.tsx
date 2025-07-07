@@ -11,9 +11,7 @@ import {
   Database, 
   Zap, 
   User,
-  LogOut,
-  Shield,
-  Settings
+  LogOut
 } from 'lucide-react';
 
 interface UserData {
@@ -45,16 +43,7 @@ const Dashboard = () => {
     navigate('/login');
   };
 
-  const handleSectionClick = (section: string, requiresAdmin = false) => {
-    if (requiresAdmin && user?.type !== 'admin') {
-      toast({
-        title: "Access Denied",
-        description: "This section requires administrator privileges",
-        variant: "destructive"
-      });
-      return;
-    }
-    
+  const handleSectionClick = (section: string) => {
     toast({
       title: "Section Access",
       description: `Accessing ${section} section...`,
@@ -72,7 +61,6 @@ const Dashboard = () => {
       description: "Add new products to the inventory system",
       icon: Plus,
       color: "from-aesthetic-green-400 to-aesthetic-green-600",
-      requiresAdmin: false,
       onClick: () => handleSectionClick("New Product")
     },
     {
@@ -80,15 +68,13 @@ const Dashboard = () => {
       description: "Assign products to employees or departments",
       icon: Users,
       color: "from-blue-400 to-blue-600",
-      requiresAdmin: user.type !== 'admin',
-      onClick: () => handleSectionClick("Assign Product", user.type !== 'admin')
+      onClick: () => handleSectionClick("Assign Product")
     },
     {
       title: "Return Product",
       description: "Process product returns and updates",
       icon: RotateCcw,
       color: "from-orange-400 to-orange-600",
-      requiresAdmin: false,
       onClick: () => handleSectionClick("Return Product")
     },
     {
@@ -96,8 +82,7 @@ const Dashboard = () => {
       description: "Access and manage the complete product database",
       icon: Database,
       color: "from-purple-400 to-purple-600",
-      requiresAdmin: user.type !== 'admin',
-      onClick: () => handleSectionClick("View Database", user.type !== 'admin')
+      onClick: () => handleSectionClick("View Database")
     }
   ];
 
@@ -119,13 +104,9 @@ const Dashboard = () => {
             
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 px-3 py-2 bg-aesthetic-green-50 rounded-lg">
-                {user.type === 'admin' ? (
-                  <Shield className="h-4 w-4 text-aesthetic-green-600" />
-                ) : (
-                  <User className="h-4 w-4 text-aesthetic-green-600" />
-                )}
+                <User className="h-4 w-4 text-aesthetic-green-600" />
                 <span className="text-sm font-medium text-aesthetic-green-700">
-                  {user.name} ({user.type})
+                  {user.name}
                 </span>
               </div>
               
@@ -152,10 +133,7 @@ const Dashboard = () => {
               Welcome back, {user.name}!
             </h2>
             <p className="text-muted-foreground">
-              {user.type === 'admin' 
-                ? 'You have full administrative access to all system functions.'
-                : 'You have user-level access. Contact an administrator for additional permissions.'
-              }
+              You have full access to all system functions and features.
             </p>
           </div>
         </div>
@@ -165,11 +143,7 @@ const Dashboard = () => {
           {dashboardSections.map((section, index) => (
             <Card 
               key={index}
-              className={`relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group ${
-                section.requiresAdmin && user.type !== 'admin' 
-                  ? 'opacity-60 cursor-not-allowed' 
-                  : ''
-              }`}
+              className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group"
               onClick={section.onClick}
             >
               <div className={`absolute inset-0 bg-gradient-to-r ${section.color} opacity-10 group-hover:opacity-20 transition-opacity`} />
@@ -178,9 +152,6 @@ const Dashboard = () => {
                   <div className={`p-3 bg-gradient-to-r ${section.color} rounded-lg shadow-lg`}>
                     <section.icon className="h-6 w-6 text-white" />
                   </div>
-                  {section.requiresAdmin && user.type !== 'admin' && (
-                    <Shield className="h-5 w-5 text-muted-foreground" />
-                  )}
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground group-hover:text-aesthetic-green-700 transition-colors">
                   {section.title}
@@ -190,15 +161,8 @@ const Dashboard = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="relative">
-                <Button 
-                  className={`w-full ${
-                    section.requiresAdmin && user.type !== 'admin'
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-aesthetic-green-600 hover:bg-aesthetic-green-700'
-                  } text-white transition-colors`}
-                  disabled={section.requiresAdmin && user.type !== 'admin'}
-                >
-                  {section.requiresAdmin && user.type !== 'admin' ? 'Admin Access Required' : 'Access Section'}
+                <Button className="w-full bg-aesthetic-green-600 hover:bg-aesthetic-green-700 text-white transition-colors">
+                  Access Section
                 </Button>
               </CardContent>
             </Card>
