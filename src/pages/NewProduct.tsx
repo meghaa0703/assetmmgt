@@ -1,18 +1,18 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus } from 'lucide-react';
+import { useData } from '../contexts/DataContext';
 
 const NewProduct = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { addProduct } = useData();
   
   const [formData, setFormData] = useState({
     department: '',
@@ -40,11 +40,32 @@ const NewProduct = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    addProduct(formData);
     toast({
       title: "Product Added",
       description: "New product has been successfully added to the database",
     });
     console.log('New Product Data:', formData);
+    // Reset form
+    setFormData({
+      department: '',
+      title: '',
+      type: '',
+      inwardDate: '',
+      quantity: '',
+      productSerialNumber: '',
+      brandMake: '',
+      range: '',
+      modelNumber: '',
+      calibrationRequired: '',
+      lastCalibrationDate: '',
+      nextCalibrationDate: '',
+      assetTagNumber: '',
+      project: '',
+      mqiSerialNumber: '',
+      cost: '',
+      purchaseDate: ''
+    });
   };
 
   return (

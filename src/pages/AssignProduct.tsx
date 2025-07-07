@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,10 +6,12 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Users } from 'lucide-react';
+import { useData } from '../contexts/DataContext';
 
 const AssignProduct = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { addAssignment } = useData();
   
   const [formData, setFormData] = useState({
     productSerialNo: '',
@@ -33,11 +34,27 @@ const AssignProduct = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    addAssignment(formData);
     toast({
       title: "Product Assigned",
       description: "Product has been successfully assigned to employee",
     });
     console.log('Assign Product Data:', formData);
+    // Reset form
+    setFormData({
+      productSerialNo: '',
+      productDescription: '',
+      model: '',
+      productType: '',
+      mqiSerialNo: '',
+      quantity: '',
+      employeeId: '',
+      employeeName: '',
+      employeeEmailId: '',
+      dateAssigned: '',
+      dateReturned: '',
+      assignedBy: ''
+    });
   };
 
   return (

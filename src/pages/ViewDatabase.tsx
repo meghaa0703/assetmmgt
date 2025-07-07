@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,73 +5,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Database } from 'lucide-react';
+import { useData } from '../contexts/DataContext';
 
 const ViewDatabase = () => {
   const navigate = useNavigate();
+  const { products, assignments, returns } = useData();
   const [selectedTable, setSelectedTable] = useState('products');
-
-  // Mock data for demonstration
-  const mockProductData = [
-    {
-      id: 1,
-      department: 'Electrical',
-      title: 'Digital Multimeter',
-      type: 'Measuring Instrument',
-      productSerialNumber: 'DMM001',
-      brandMake: 'Fluke',
-      modelNumber: '87V',
-      calibrationRequired: 'Yes',
-      assetTagNumber: 'ET001',
-      mqiSerialNumber: 'MQI001',
-      cost: '299.99',
-      purchaseDate: '2024-01-15'
-    },
-    {
-      id: 2,
-      department: 'Electrical',
-      title: 'Oscilloscope',
-      type: 'Testing Equipment',
-      productSerialNumber: 'OSC001',
-      brandMake: 'Tektronix',
-      modelNumber: 'TBS1000',
-      calibrationRequired: 'Yes',
-      assetTagNumber: 'ET002',
-      mqiSerialNumber: 'MQI002',
-      cost: '1299.99',
-      purchaseDate: '2024-02-01'
-    }
-  ];
-
-  const mockAssignmentData = [
-    {
-      id: 1,
-      productSerialNo: 'DMM001',
-      productDescription: 'Digital Multimeter',
-      model: '87V',
-      productType: 'Measuring Instrument',
-      mqiSerialNo: 'MQI001',
-      quantity: '1',
-      employeeId: 'EMP001',
-      employeeName: 'John Smith',
-      employeeEmailId: 'john.smith@company.com',
-      dateAssigned: '2024-03-01',
-      assignedBy: 'Admin'
-    }
-  ];
-
-  const mockReturnData = [
-    {
-      id: 1,
-      productSerialNo: 'OSC001',
-      productDescription: 'Oscilloscope',
-      modelNo: 'TBS1000',
-      mqiSerialNo: 'MQI002',
-      quantity: '1',
-      employeeId: 'EMP002',
-      employeeName: 'Jane Doe',
-      employeeEmailId: 'jane.doe@company.com'
-    }
-  ];
 
   const renderProductTable = () => (
     <Table>
@@ -92,21 +30,29 @@ const ViewDatabase = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {mockProductData.map((product) => (
-          <TableRow key={product.id}>
-            <TableCell>{product.department}</TableCell>
-            <TableCell>{product.title}</TableCell>
-            <TableCell>{product.type}</TableCell>
-            <TableCell>{product.productSerialNumber}</TableCell>
-            <TableCell>{product.brandMake}</TableCell>
-            <TableCell>{product.modelNumber}</TableCell>
-            <TableCell>{product.calibrationRequired}</TableCell>
-            <TableCell>{product.assetTagNumber}</TableCell>
-            <TableCell>{product.mqiSerialNumber}</TableCell>
-            <TableCell>${product.cost}</TableCell>
-            <TableCell>{product.purchaseDate}</TableCell>
+        {products.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={11} className="text-center text-muted-foreground">
+              No products added yet
+            </TableCell>
           </TableRow>
-        ))}
+        ) : (
+          products.map((product) => (
+            <TableRow key={product.id}>
+              <TableCell>{product.department}</TableCell>
+              <TableCell>{product.title}</TableCell>
+              <TableCell>{product.type}</TableCell>
+              <TableCell>{product.productSerialNumber}</TableCell>
+              <TableCell>{product.brandMake}</TableCell>
+              <TableCell>{product.modelNumber}</TableCell>
+              <TableCell>{product.calibrationRequired}</TableCell>
+              <TableCell>{product.assetTagNumber}</TableCell>
+              <TableCell>{product.mqiSerialNumber}</TableCell>
+              <TableCell>${product.cost}</TableCell>
+              <TableCell>{product.purchaseDate}</TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );
@@ -125,25 +71,35 @@ const ViewDatabase = () => {
           <TableHead>Employee Name</TableHead>
           <TableHead>Employee Email</TableHead>
           <TableHead>Date Assigned</TableHead>
+          <TableHead>Date Returned</TableHead>
           <TableHead>Assigned By</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {mockAssignmentData.map((assignment) => (
-          <TableRow key={assignment.id}>
-            <TableCell>{assignment.productSerialNo}</TableCell>
-            <TableCell>{assignment.productDescription}</TableCell>
-            <TableCell>{assignment.model}</TableCell>
-            <TableCell>{assignment.productType}</TableCell>
-            <TableCell>{assignment.mqiSerialNo}</TableCell>
-            <TableCell>{assignment.quantity}</TableCell>
-            <TableCell>{assignment.employeeId}</TableCell>
-            <TableCell>{assignment.employeeName}</TableCell>
-            <TableCell>{assignment.employeeEmailId}</TableCell>
-            <TableCell>{assignment.dateAssigned}</TableCell>
-            <TableCell>{assignment.assignedBy}</TableCell>
+        {assignments.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={12} className="text-center text-muted-foreground">
+              No product assignments yet
+            </TableCell>
           </TableRow>
-        ))}
+        ) : (
+          assignments.map((assignment) => (
+            <TableRow key={assignment.id}>
+              <TableCell>{assignment.productSerialNo}</TableCell>
+              <TableCell>{assignment.productDescription}</TableCell>
+              <TableCell>{assignment.model}</TableCell>
+              <TableCell>{assignment.productType}</TableCell>
+              <TableCell>{assignment.mqiSerialNo}</TableCell>
+              <TableCell>{assignment.quantity}</TableCell>
+              <TableCell>{assignment.employeeId}</TableCell>
+              <TableCell>{assignment.employeeName}</TableCell>
+              <TableCell>{assignment.employeeEmailId}</TableCell>
+              <TableCell>{assignment.dateAssigned}</TableCell>
+              <TableCell>{assignment.dateReturned}</TableCell>
+              <TableCell>{assignment.assignedBy}</TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );
@@ -160,21 +116,31 @@ const ViewDatabase = () => {
           <TableHead>Employee ID</TableHead>
           <TableHead>Employee Name</TableHead>
           <TableHead>Employee Email</TableHead>
+          <TableHead>Return Date</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {mockReturnData.map((returnItem) => (
-          <TableRow key={returnItem.id}>
-            <TableCell>{returnItem.productSerialNo}</TableCell>
-            <TableCell>{returnItem.productDescription}</TableCell>
-            <TableCell>{returnItem.modelNo}</TableCell>
-            <TableCell>{returnItem.mqiSerialNo}</TableCell>
-            <TableCell>{returnItem.quantity}</TableCell>
-            <TableCell>{returnItem.employeeId}</TableCell>
-            <TableCell>{returnItem.employeeName}</TableCell>
-            <TableCell>{returnItem.employeeEmailId}</TableCell>
+        {returns.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={9} className="text-center text-muted-foreground">
+              No product returns yet
+            </TableCell>
           </TableRow>
-        ))}
+        ) : (
+          returns.map((returnItem) => (
+            <TableRow key={returnItem.id}>
+              <TableCell>{returnItem.productSerialNo}</TableCell>
+              <TableCell>{returnItem.productDescription}</TableCell>
+              <TableCell>{returnItem.modelNo}</TableCell>
+              <TableCell>{returnItem.mqiSerialNo}</TableCell>
+              <TableCell>{returnItem.quantity}</TableCell>
+              <TableCell>{returnItem.employeeId}</TableCell>
+              <TableCell>{returnItem.employeeName}</TableCell>
+              <TableCell>{returnItem.employeeEmailId}</TableCell>
+              <TableCell>{returnItem.returnDate}</TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );
@@ -210,9 +176,9 @@ const ViewDatabase = () => {
                   <SelectValue placeholder="Select table" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="products">Products</SelectItem>
-                  <SelectItem value="assignments">Product Assignments</SelectItem>
-                  <SelectItem value="returns">Product Returns</SelectItem>
+                  <SelectItem value="products">Products ({products.length})</SelectItem>
+                  <SelectItem value="assignments">Product Assignments ({assignments.length})</SelectItem>
+                  <SelectItem value="returns">Product Returns ({returns.length})</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,10 +6,12 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
+import { useData } from '../contexts/DataContext';
 
 const ReturnProduct = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { addReturn } = useData();
   
   const [formData, setFormData] = useState({
     productSerialNo: '',
@@ -29,11 +30,23 @@ const ReturnProduct = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    addReturn(formData);
     toast({
       title: "Product Returned",
       description: "Product has been successfully returned",
     });
     console.log('Return Product Data:', formData);
+    // Reset form
+    setFormData({
+      productSerialNo: '',
+      productDescription: '',
+      modelNo: '',
+      mqiSerialNo: '',
+      quantity: '',
+      employeeId: '',
+      employeeName: '',
+      employeeEmailId: ''
+    });
   };
 
   return (
